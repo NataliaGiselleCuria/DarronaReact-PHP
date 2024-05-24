@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,21 +6,21 @@ import React, { useEffect, useState } from 'react';
 function App() {
     const [resultado, setResultado] = useState(null);
 
+    
     useEffect(() => {
-      fetch('http://localhost:8000/index.php')
-         .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(resultado => setData(resultado))
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
-
+        fetch('http://localhost:80/Darrona2/DarronaPhp/index.php')
+          .then(response => response.json())
+          .then(data => setResultado(data)
+           );
+           
+      }, []);
+      console.table(resultado);
     return (
         <div>
-            <p> {resultado}</p>
+            <p>hola</p>
+            
+            {resultado.map(resul => <div>{resul[' COL 1 ']}</div>)}
+            {/* {JSON.stringify(resultado)} */}
         </div>
     );
 }
