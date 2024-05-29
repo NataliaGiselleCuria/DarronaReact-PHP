@@ -1,0 +1,117 @@
+.nav-lis {
+    display: flex;
+    width: 100%;
+    height: 85px;
+    padding: 0 4%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--fondo);
+    box-sizing: border-box;
+}
+
+.nav-lis div {
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo h1 {
+    align-items: flex-start;
+    font-size: 16px;
+}
+
+.logo h1 span {
+    height: 20px;
+}
+
+.summary-cont{
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start!important;
+    color: var(--verde);
+    padding-right: 10%;
+}
+
+.summary-cont div {
+    height: fit-content;
+    gap: 10px;
+    font-size: larger;
+   
+}
+
+p.summary {
+    font-weight: 500;
+}
+
+p.price-summary {
+    font-weight: 600;
+}
+
+p.minimum-purchase {
+    font-size: smaller;
+}
+
+.buttons-list {
+    position: absolute;
+    bottom: -60px;
+}
+
+button.button-list {
+    border: 1px solid var(--verde);
+    background: none;
+    color: var(--verde);
+    padding: 5px 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+.button-list:hover{
+    color: white;
+    background-color: var(--verde);
+}
+
+.cont-products {
+    height: 100vh;
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+.whatsapp, .inicio{
+    position: fixed;
+    width: 56px;
+    height: 56px;
+    right: 30px;
+    z-index: 3;
+}
+
+.whatsapp {  
+    bottom: 30px;
+    background-color: #3bab21;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: revert;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.whatsapp img{
+    height: 50%;
+}
+
+.inicio{
+    bottom: 80px;  
+}
+
+.inicio img{
+    height: 50%;
+}

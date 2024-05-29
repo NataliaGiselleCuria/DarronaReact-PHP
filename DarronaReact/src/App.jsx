@@ -1,28 +1,38 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import React, { useEffect, useState } from 'react';
 
-function App() {
-    const [resultado, setResultado] = useState(null);
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './Components/home/Home';
+import ListaDePrecios from './Components/listaDePrecios/ListaDePrecios';
+// import React, { useEffect, useState } from 'react';
 
-    
-    useEffect(() => {
-        fetch('http://localhost:80/Darrona2/DarronaPhp/index.php')
-          .then(response => response.json())
-          .then(data => setResultado(data)
-           );
-           
-      }, []);
-      console.table(resultado);
-    return (
-        <div>
-            <p>hola</p>
-            
-            {resultado.map(resul => <div>{resul[' COL 1 ']}</div>)}
-            {/* {JSON.stringify(resultado)} */}
-        </div>
-    );
-}
+
+const  App = () => {
+      
+  const [tableType, setTableType] = useState(null);
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home setTableType={setTableType} />} />
+        <Route path="/lista-de-precios" element={<ListaDePrecios tableType={tableType} />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App
+
+
+ // const [resultado, setResultado] = useState([]);
+
+    
+    // useEffect(() => {
+    //     fetch('http://localhost:80/darronaReact/DarronaPhp/index.php')
+    //       .then(response => response.json())
+    //       .then(data => {
+    //         setResultado(data);
+    //         console.log(resultado)
+          
+    // });
+           
+    //   }, []);
