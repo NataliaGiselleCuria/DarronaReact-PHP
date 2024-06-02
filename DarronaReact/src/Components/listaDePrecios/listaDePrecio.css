@@ -1,3 +1,5 @@
+
+
 .nav-lis {
     display: flex;
     width: 100%;
@@ -14,6 +16,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
 }
 
 .logo h1 {
@@ -30,14 +33,13 @@
     flex-direction: column;
     align-items: flex-start!important;
     color: var(--verde);
-    padding-right: 10%;
 }
 
 .summary-cont div {
     height: fit-content;
     gap: 10px;
-    font-size: larger;
-   
+    font-size: larger; 
+    
 }
 
 p.summary {
@@ -50,11 +52,42 @@ p.price-summary {
 
 p.minimum-purchase {
     font-size: smaller;
+    margin-right: 55px;
+}
+
+.nav2 {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    padding: 0 4%;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.name-type-of-buyer {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    gap: 10px;
+}
+
+.name-type-of-buyer img {
+    height: 50%;
+    cursor: pointer;
+}
+
+.nav2 h3{
+    font-size: medium;
+    background: -webkit-linear-gradient(90deg, var(--verde), var(--principal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .buttons-list {
-    position: absolute;
-    bottom: -60px;
+    padding-right: 55px;
+    display: flex;
+    gap: 8px;
 }
 
 button.button-list {
@@ -64,6 +97,7 @@ button.button-list {
     padding: 5px 10px;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
+    width: 120px;
 }
 
 .button-list:hover{
@@ -71,17 +105,193 @@ button.button-list {
     background-color: var(--verde);
 }
 
-.cont-products {
-    height: 100vh;
-    width: 100%;
+.lista-precios .cont{
+    height: auto;
 }
 
+.cont-products {
+    height: 80vh;
+    width: 100%;
+    display: flex;
+}
 
+.categories-cont {
+    text-align: start;
+    padding-inline-start: 3%;
+    width: 12%;
+}
 
+.categories-cont h2{
+    padding-left: 15px; 
+    background: -webkit-linear-gradient(90deg, var(--verde), var(--principal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    margin-bottom: 15px;
+    margin-top: 25px;
+}
 
+.search-bar {
+    display: flex;
+    height: 25px;
+    gap: 5px;
+    margin-bottom: 25px;
+    width: 75%;
+    margin-left: 10px;
+}
 
+.search-bar img {
+    height: 80%;
+    align-self: center;
+}
 
+input.inputSearch {
+    border: none;
+    border-bottom: 1px solid var(--verde);
+    width: 90%;
+    font-family: 'Poppins', sans-serif;
+}
 
+.inputSearch:focus-visible{
+    outline: none;
+}
+
+.categories {
+    text-align: start;
+}
+
+.categories ul {
+    padding: 0;
+}
+.categories ul li{
+    list-style: none;
+    margin-bottom: 6px;
+    font-size: 14px;
+    padding-left: 15px;
+    letter-spacing: 0.5px;
+}
+
+.categories ul li:hover{
+    background-color: var(--verde);
+    color: white;
+}
+
+.categories li.selected {
+    font-weight: 500;
+}
+
+.cont-table {
+    height: 100%;
+    width: 85%;
+    margin: auto;
+    padding-left: 10px;
+    overflow: auto;
+}
+
+.name-category {
+    position: sticky;
+    top: 0;
+    background: white;
+}
+
+.name-category h3 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    color: #afa57b;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.table{
+    text-align: start;
+}
+
+#table {
+    border-collapse: collapse;
+    margin-right: 3%;
+}
+
+thead{
+    background-color: #e3e0d4;
+    text-align: left;
+    position: sticky;
+    top: 30px;
+    outline: 5px solid white;
+}
+
+thead tr th {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 2px 5px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f1f1f1;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff; 
+}
+
+td.small {
+    font-size: small;
+}
+
+.center {
+    text-align: center;
+}
+
+th.th-prod {
+    width: 30%;
+}
+
+th.th-cant{
+    width: 5%;
+}
+
+td {
+    padding: 2px;
+}
+
+input[type="number"] {
+    width: 100%;
+    height: 18px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid var(--claro);
+    font-family: 'Poppins';
+    font-size: medium;
+}
+
+input::placeholder {
+    font-family: 'Poppins', sans-serif;    
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input.center:focus-visible {
+    outline: 1px solid var(--claro);
+    border-radius: 10px;
+    box-shadow: 1px 1px 3px var(--claro);
+}
+
+.price {
+    padding-left: 10px;
+}
+
+.total{
+    padding-left: 30px;
+    width: 10%;
+}
 
 
 

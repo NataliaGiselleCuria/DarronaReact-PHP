@@ -24,7 +24,7 @@ const Home = ({ setTableType }) => {
         <div className="buttons">
           <button className="b-1" onClick={() => handleButtonClick('minorista')}><p>MINORISTA</p><img src={icon1} alt=""></img></button>
           <button className="b-3" onClick={() => handleButtonClick('mayorista')}><p>MAYORISTA</p><img src={icon2} alt=""></img></button>
-          <button className="b-3" onClick={() => handleButtonClick('distribuidora')}><p>DISTRIBUIDOR</p><img src={icon3} alt=""></img></button>
+          <button className="b-3" onClick={() => handleButtonClick('distribuidor')}><p>DISTRIBUIDOR</p><img src={icon3} alt=""></img></button>
         </div>
       </section>
       <Footer></Footer>

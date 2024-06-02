@@ -1,38 +1,34 @@
 
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './Components/home/Home';
 import ListaDePrecios from './Components/listaDePrecios/ListaDePrecios';
-// import React, { useEffect, useState } from 'react';
+import { DataContext } from './Context/DataProvider';
 
 
 const  App = () => {
       
-  const [tableType, setTableType] = useState(null);
+  const { tableType, setTableType } = useContext(DataContext)
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home setTableType={setTableType} />} />
-        <Route path="/lista-de-precios" element={<ListaDePrecios tableType={tableType} />} />
-      </Routes>
-    </BrowserRouter>
+    
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home setTableType={setTableType} />} />
+          <Route path="/lista-de-precios" element={<ListaDePrecios tableType={tableType} />} />
+        </Routes>
+      </BrowserRouter>
+
   );
 };
 
 export default App
 
 
- // const [resultado, setResultado] = useState([]);
-
-    
-    // useEffect(() => {
-    //     fetch('http://localhost:80/darronaReact/DarronaPhp/index.php')
-    //       .then(response => response.json())
-    //       .then(data => {
-    //         setResultado(data);
-    //         console.log(resultado)
-          
-    // });
-           
-    //   }, []);
+// LOAD DATA INFILE 'C:/xampp/htdocs/darronaReact/productos.csv'
+// INTO TABLE productos
+// CHARACTER SET utf8mb4
+// FIELDS TERMINATED BY ';'
+// ENCLOSED BY '"'
+// LINES TERMINATED BY '\n'
+// IGNORE 1 LINES;
