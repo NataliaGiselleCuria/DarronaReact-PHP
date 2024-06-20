@@ -1,20 +1,23 @@
-<?php 	
+<?php 		
 error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require 'database.php';
 
 $db = new DataBase();
 $con = $db->conectar();
 
-$nuevoUsuario = $_POST['nuevoUsuario'];
-$nuevaClave = $_POST['nuevaClave'];
+        
+$nuevoMonto = $_POST['nuevoMonto'];
 
-$sql4 = "UPDATE `login` SET `usuario`='$nuevoUsuario', `clave`= sha2('$nuevaClave',256) WHERE `id`=1";
+$sql5 = "UPDATE `montominimo` SET `monto`='$nuevoMonto' WHERE `id`=1";
 
-if ($con->query($sql4)) {
+if ($con->query($sql5)) {
     echo '<i class="fa-solid fa-check"></i>';
 } else {
     echo '<i class="fa-solid fa-xmark"></i> Error al actualizar: ' . $con->errorInfo()[2];
 }
+
+
 
 ?>
