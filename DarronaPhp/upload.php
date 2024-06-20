@@ -1,66 +1,98 @@
-<?php 		
+<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require 'database.php';
+
+$dominioPermitido = "http://localhost:5173";
+header("Access-Control-Allow-Origin: $dominioPermitido");
+header("Access-Control-Allow-Headers: content-type");
+header("Access-Control-Allow-Methods: OPTIONS,GET,PUT,POST,DELETE");
 
 $db = new DataBase();
 $con = $db->conectar();
 
 $directorioDescarga = "descargas/";
 $uploadOk = 1;
-$targetFile = $directorioDescarga . basename($_FILES["fileInput"]["name"]);
-$fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-
-    if ($fileType != "csv") {
-        echo "Solo pueden subirse archivos en formato CSV.";
-        $uploadOk = 0;
-    } else{
-        if ($uploadOk == 0) {
-            echo '<i class="fa-solid fa-xmark"></i> Fallo en la carga del archivo.';
+try{
+    if (isset($_FILES["fileInput"]) && !empty($_FILES["fileInput"]["name"])) {
+        $targetFile = $directorioDescarga . basename($_FILES["fileInput"]["name"]);
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
     
-        } else { 
-    
-            $truncateQuery = "TRUNCATE TABLE productos";
-            if ($con->query($truncateQuery)) {
-                
+        if ($fileType != "csv") {
+            echo "Solo pueden subirse archivos en formato CSV.";
+            $uploadOk = 0;
+        } else {
+            if ($uploadOk == 0) {
+                echo 'Fallo en la carga del archivo.';
             } else {
-                echo '<i class="fa-solid fa-xmark"></i> Error al limpiar la tabla: ' . $con->errorInfo()[2];
-                exit; // Stop execution if cleaning the table fails
+    
+                $truncateQuery = "TRUNCATE TABLE productos";
+                if ($con->query($truncateQuery)) {
+    
+                } else {
+                    echo ' Error al limpiar la tabla: ' . $con->errorInfo()[2];
+                    exit;
+                }
+    
+                $fileName = $_FILES['fileInput']['name'];
+                $tempFilePath = $_FILES['fileInput']['tmp_name'];
+    
+                $targetFilePath = $directorioDescarga . $fileName;
+                move_uploaded_file($tempFilePath, $targetFilePath);
+    
+                $csvFile = fopen($targetFilePath, 'r');
+    
+                fgetcsv($csvFile);
+    
+                $sql = $con->prepare(
+                    "INSERT INTO productos ( 
+                        `Código`,
+                        `Producto`,
+                        `Categoría`,
+                        `Presentación`,
+                        `Cantidad x pres.`,
+                        `Peso`,
+                        `minorista precio x presentación`,
+                        `mayorista precio x presentación`,
+                        `distribuidor precio x presentación`)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+    
+                $lineNumber = 1;
+
+                while (($data = fgetcsv($csvFile, 1000, ";")) !== false) {
+                    $lineNumber++;
+                    $data = array_map('trim', $data);
+                    $data = array_filter($data, fn($value) => !is_null($value) && $value !== '');
+
+                    if (count($data) === 9) {
+                        $sql->execute($data);
+                    } else {
+                        echo json_encode([
+                            "status" => "error",
+                            "message" => "\nLa fila $lineNumber no tiene el número correcto de elementos.\nContenido de la fila:\n " . implode(", ", $data) . "\n\nPor favor, revise su archivo de productos, no deve contener casillas vacías. Guarde y vuelvas a cargar el archivo."
+                        ]);
+                        exit;
+                    }
+                }
+
+                fclose($csvFile);
+                echo json_encode(["status" => "success", "message" => "Archivo CSV cargado exitosamente."]);
             }
-    
-            // Get file details
-            $fileName = $_FILES['fileInput']['name'];
-            $tempFilePath = $_FILES['fileInput']['tmp_name'];
-    
-            // Move the uploaded file to the specified directory
-            $targetFilePath = $directorioDescarga . $fileName;
-            move_uploaded_file($tempFilePath, $targetFilePath);
-    
-            // Open and read the CSV file
-            $csvFile = fopen($targetFilePath, 'r');
-    
-            // Skip the header row
-            fgetcsv($csvFile);
-    
-            // Prepare the INSERT statement
-            $sql4 = $con->prepare("INSERT INTO productos (`Código`, `Producto`, `Categoría`, `kG x Unidad`, `KG x Bulto`, `Precio x Unidad`, `Precio x Bulto`) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    
-            // Loop through the CSV rows and insert into the database
-            while (($data = fgetcsv($csvFile)) !== false) {
-                $sql4->execute($data);
-            }
-    
-            // Close the file and database connection
-            fclose($csvFile);
-            $con = null;
-    
-            echo '<i class="fa-solid fa-check"></i>';
         }
+    }else {
+        echo json_encode(["status" => "error", "message" => "No se ha proporcionado ningún archivo."]);
     }
-    
-
-
+}catch (PDOException $e) {
+    if ($e->getCode() == 'HY093') {
+        echo json_encode(["status" => "error", "message" => "Error en la carga: Revise que el archivo CSV tenga las columnas correctas."]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error al cargar el archivo CSV: " . $e->getMessage()]);
+    }
+} catch (Exception $e) {
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+}
 
 ?>
