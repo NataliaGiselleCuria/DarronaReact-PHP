@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </OrderProvider>
       </DataProvider>
     </ApiProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )
