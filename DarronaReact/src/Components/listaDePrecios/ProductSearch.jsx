@@ -1,17 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { DataContext } from '../../Context/DataProvider';
 import searchIcon from '../../assets/search.png'
+import { useApi } from '../../Context/ApiProvider';
 
 const SearchBar = () => {
-  const { setFilteredProducts, resData } = useContext(DataContext);
+  const { products } = useApi();
+  const { setFilteredProducts } = useContext(DataContext);
+  
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    const filtered = resData.filter(product =>
+    const filtered = products.filter(product =>
       product.Producto.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredProducts(filtered);
-  }, [query, resData, setFilteredProducts]);
+  }, [query, products, setFilteredProducts]);
 
   return (
     <div className='search-bar'>

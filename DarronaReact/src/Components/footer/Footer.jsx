@@ -1,38 +1,46 @@
 import React from 'react'
-import email from '../../assets/email.png'
-import wp from '../../assets/whatsapp.png'
-import lc from '../../assets/location.png'
+import wp from '../../assets/wp.png'
+import ig from '../../assets/ig.png'
+import { useApi } from '../../Context/ApiProvider'
 
-const Footer = () => {
+const Footer = ({ closeInfo, visible }) => {
+
+  const { contact, shipments, isLoading } = useApi();
+
+  const shipmentsContent = () =>{
+    return shipments.map((item, index) => (
+      <p key={index}>{item.lugar} - {item.dia}</p>
+    ));
+  }
+
   return (
-    <div className="footer">
+    <div className={`footer ${visible ? 'visible' : ''}`}>
       <div className='footer-cont'>
+        <button className="close-btn" onClick={closeInfo}><i className="arrow down"></i></button>
         <div className='column'>
-          <h4>INFO</h4>
-          <span><img src={lc}></img><p>Arregui 6559 - CABA (Depósito)</p></span>
-          <span><img src={wp}></img><p>+54 9 2214 97-0274</p></span>
-          <span><img src={email}></img><p>ad.darrona@gmail.com</p></span>
+        <h4>INFO</h4>
+          <span><p>{isLoading ? '' : contact.find(item => item.nombre === 'direccion').valor}</p> </span>
+          <span><p>{isLoading ? '' : contact.find(item => item.nombre === 'telefono').valor}</p></span>
+          <span><p>{isLoading ? '' : contact.find(item => item.nombre === 'email').valor}</p></span>
         </div>
         <div className='column'>
           <h4>ZONAS Y DIAS DE ENTREGA</h4>
           <div className="col">
-            <div>
-              <p>LA PLATA / CITY BELL - Miercoles</p>
-              <p>AMBA SUR -Jueves</p>
-              <p>AMBA NORTE - Viernes</p>
-            </div>
-            <div>
-              <p>CABA -Viernes</p>
-              <p>AMBA OESTE - Viernes / Sabados</p>
-              <p>DESPACHOS A TODO EL PAIS - Viernes</p>
-            </div>
+            {isLoading ? (
+              <p>Cargando...</p>
+            ) : (
+              shipmentsContent()
+            )}
           </div>
         </div>
         <div className='column'>
-          <h4>HORARIOS DE ENTREGA</h4>
-          <p>Lunes a Viernes - 9 a 16hs</p>
-          <h4>SEGUINOS</h4>
-          <p>@distribuidoradarrona</p>
+          <h4>HORARIO DE ATENCIÓN</h4>
+          <p>{isLoading ? '' : contact.find(item => item.nombre === 'entregas').valor}</p>
+          <span></span>
+          <span className='redes'>
+            <a href='https://wa.me/+5492214970274?text=Hola%20Darrona!%20'><img src={wp} alt="logo de whatsapp"></img></a>
+            <a href='https://www.instagram.com/distribuidoradarrona/'><img src={ig} alt="logo de instagram"></img></a>
+          </span>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { DataContext } from '../../Context/DataProvider';
 import { useOrder } from '../../Context/OrderProvider'; 
 
-const Table = ( {showOrder} ) => {
+const Table = ( {showOrder, isFinalized} ) => {
   const { filteredProducts, selectedCategory, tableType } = useContext(DataContext);
   const { addToOrder, order, removeFromOrder } = useOrder();
 
@@ -10,11 +10,8 @@ const Table = ( {showOrder} ) => {
   const hasValidPrices = (product) => {
     const prices = [
       product['minorista precio x presentación'],
-      product['minorista precio x unidad'],
       product['mayorista precio x presentación'],
-      product['mayorista precio x unidad'],
       product['distribuidor precio x presentación'],
-      product['distribuidor precio x unidad']
     ];
     return prices.every(price => price !== null && price !== '' && parseFloat(price.replace(/[^\d.-]/g, '')) > 0);
   };
@@ -26,25 +23,57 @@ const Table = ( {showOrder} ) => {
 
   //Mostrar solo las columnas correspondientes al consumidor seleccionado en Home.
   const renderTypeOfBuyerColumns = (product) => {
+
+    const formatPrice = (priceText) => {
+      // Remover el signo de pesos y las comas, y convertir a número
+      return parseFloat(priceText.replace(/[$.]/g, '').replace(/,/, '.'));
+  };
+
+    const formatQuantity = (quantityText) => {
+      // Convertir la cantidad a número (en caso de que también sea un texto)
+      return parseFloat(quantityText);
+    };
+
+    const formatCurrency = (value) => {
+      // Formatear el número al estilo 0.000,00 con signo de pesos
+      return value.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+  };
+
     if (tableType === 'minorista') {
+
+      const precioPorPresentacion = formatPrice(product['minorista precio x presentación']);
+      const cantidadPorPresentacion = formatQuantity(product['Cantidad x pres.']);
+      const precioPorUnidad = precioPorPresentacion / cantidadPorPresentacion;
+      
       return (
         <>
+          <td className='price'>{formatCurrency(precioPorUnidad)}</td>
           <td className='price'>{product['minorista precio x presentación']}</td>
-          <td className='price'>{product['minorista precio x unidad']}</td>
+
         </>
       );
     } else if (tableType === 'mayorista') {
+
+      const precioPorPresentacion = formatPrice(product['mayorista precio x presentación']);
+      const cantidadPorPresentacion = formatQuantity(product['Cantidad x pres.']);
+      const precioPorUnidad = precioPorPresentacion / cantidadPorPresentacion;
+
       return (
         <>
+          <td className='price'>{formatCurrency(precioPorUnidad)}</td>
           <td className='price'>{product['mayorista precio x presentación']}</td>
-          <td className='price'>{product['mayorista precio x unidad']}</td>
         </>
       );
     } else if (tableType === 'distribuidor') {
+
+      const precioPorPresentacion = formatPrice(product['distribuidor precio x presentación']);
+      const cantidadPorPresentacion = formatQuantity(product['Cantidad x pres.']);
+      const precioPorUnidad = precioPorPresentacion / cantidadPorPresentacion;
+
       return (
         <>
+          <td className='price'>{formatCurrency(precioPorUnidad)}</td>
           <td className='price'>{product['distribuidor precio x presentación']}</td>
-          <td className='price'>{product['distribuidor precio x unidad']}</td>
         </>
       );
     }
@@ -56,30 +85,26 @@ const Table = ( {showOrder} ) => {
 
   const handleQuantityChange = (product, quantity) => {
     setQuantities(prevQuantities => ({
-      
-      ...prevQuantities,
-      [product.Código]: quantity,
-
+        ...prevQuantities,
+        [product.Código]: quantity,
     }));
-  
+
     if (quantity === 0 || quantity === '') {
-
-      removeFromOrder(product);
-
+        removeFromOrder(product);
     } else {
-
-      const totalPrice = calculateTotalPrice(product, quantity);
-      addToOrder(product, quantity, totalPrice);
+        const totalPrice = calculateTotalPrice(product, quantity);
+        addToOrder(product, quantity, totalPrice);
     }
-  };
+};
 
+  
   //Calcular precio total de cada producto.
   const calculateTotalPrice = (product, quantity) => {
-    const presUnitAttributeName = `${tableType.toLowerCase()} precio x unidad`;
-    const unitPrice = parseFloat(product[presUnitAttributeName].replace(/[^0-9,-]+/g, "").replace(",", "."));
-    const quantityPerPres = parseFloat(product['Cantidad x pres.'].replace(",", "."));
-    return unitPrice * quantity * quantityPerPres;
-  };
+    const productPrice = `${tableType.toLowerCase()} precio x presentación`;
+    const pricePerPresentation = parseFloat(product[productPrice].replace(/[$.]/g, '').replace(/,/, '.'));
+    const totalPrice = pricePerPresentation * quantity;
+    return totalPrice.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+};
 
 
   return (
@@ -90,22 +115,23 @@ const Table = ( {showOrder} ) => {
       <table id="table">
         <thead>
           <tr>
-            <th>CÓDIGO</th>
+            <th className='cd'>CÓDIGO</th>
             <th className='th-prod'>PRODUCTO</th>
             <th className='center'>Unidad de medida</th>
             <th className='center'>Cantidad x pres.</th>
             <th className='center'>Peso X pres.</th>
-            <th>Precio x pres.</th>
             <th>Precio Unitario</th>
+            <th>Precio x pres.</th>
             <th className='th-cant center highlight'>Cantidad</th>
             <th className='total'>Total x producto</th>
           </tr>
         </thead>
         <tbody>
+          <tr id="inicio"></tr>
         {(showOrder ? order : displayedProducts).map(item => (
 
             <tr key={showOrder ? item.product.Código : item.Código}>
-              <td className='small'>{showOrder ? item.product.Código : item.Código}</td>
+              <td className='small cd'>{showOrder ? item.product.Código : item.Código}</td>
               <td>{showOrder ? item.product.Producto : item.Producto}</td>
               <td className='center small'>{showOrder ? item.product.Presentación : item.Presentación}</td>
               <td className='center'>{showOrder ? item.product.Peso : item.Peso}</td>
@@ -123,11 +149,17 @@ const Table = ( {showOrder} ) => {
                     handleQuantityChange(showOrder ? item.product : item, 0);
                   }
                 }}
+                readOnly={showOrder && isFinalized}
+                onFocus={(e) => {
+                  if (showOrder && isFinalized) {
+                    e.target.blur();
+                  }
+                }}
               />
               </td>
               <td className='total'>
                 {quantities[showOrder ? item.product.Código : item.Código] > 0 
-                  ? '$ ' + calculateTotalPrice(showOrder ? item.product : item, quantities[showOrder ? item.product.Código : item.Código]).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/\B(?=(\d{3})+(?!\d))/g, ".") 
+                  ? calculateTotalPrice(showOrder ? item.product : item, quantities[showOrder ? item.product.Código : item.Código]).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/\B(?=(\d{3})+(?!\d))/g, ".") 
                   : ''}
               </td>
             </tr>

@@ -7,8 +7,8 @@ export const OrderProvider = ({ children }) => {
   const [order, setOrder] = useState([]);
   const [totalOrder, setTotalOrder] = useState(0);
 
-  const totalOrderFormat = totalOrder.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
+  
+  const totalOrderFormat = totalOrder.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
 
   const addToOrder = (product, quantity, totalProduct) => {
     setOrder((prevOrder) => {
@@ -25,7 +25,7 @@ export const OrderProvider = ({ children }) => {
           updatedOrder[existingProductIndex] = {
             ...updatedOrder[existingProductIndex],
             quantity,
-            totalProduct,
+            totalProduct: parseFloat(totalProduct.replace(/[$.]/g, '').replace(/,/, '.')),
           };
           return updatedOrder;
         }
@@ -34,7 +34,7 @@ export const OrderProvider = ({ children }) => {
         if (quantity > 0) {
           return [
             ...prevOrder,
-            { product, quantity, totalProduct },
+            { product, quantity, totalProduct: parseFloat(totalProduct.replace(/[$.]/g, '').replace(/,/, '.')) },
           ];
         }                                                            
 
@@ -45,7 +45,7 @@ export const OrderProvider = ({ children }) => {
 
   const removeFromOrder = (product) => {
     setOrder(prevOrder => prevOrder.filter(item => item.product.Código !== product.Código));
-  };
+};
 
   useEffect(() => {
     const total = order.reduce((acc, item) => acc + item.totalProduct, 0);

@@ -1,15 +1,23 @@
 :root{
+    --nav:#738172;
     --claro: #DAD3BA;
     --principal: #554E46;
     --verde: #4d5e52;
     --fondo: #F7F7F7;
+    --head-table: #e3e0d4;
 }
 
-html, body, #root{
+html, body, #root, .lista-precios{
     margin: 0;
     height: 100vh;
     width: 100%;
     font-family: "Poppins", sans-serif;
+    overflow: hidden;
+    
+}
+
+a {
+    text-decoration: none;
 }
 
 h1, h4, p{
@@ -24,10 +32,29 @@ button{
     cursor: pointer;
 }
 
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+
+::-webkit-scrollbar-thumb {
+background: #888;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+
 .nav {
     height: 30px;
     width: 100%;
-    background-color: var(--claro);
+    background: var(--nav);
+    /* background: linear-gradient(90deg, #505c4f, #357f6d, #505c4f); */
     font-size: 11px;
     font-weight: 500;
     display: flex;
@@ -38,16 +65,32 @@ button{
 }
 
 .nav span{
+    display: flex;
     gap: 5px;
 }
 
+.cont{
+    text-align: center;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* footer */
 .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
     display: flex;
     width: 100%;
-    height: calc(20vh - 30px);
+    padding: 10px;
     background-color: var(--principal);
     border-top: 5px solid var(--claro);
     box-sizing: border-box;
+    padding-bottom: 15px;
 }
 
 .footer-cont {
@@ -59,6 +102,7 @@ button{
     justify-content: center;
     align-items: flex-start;
     color: white;
+    position: relative;
 }
 
 .column {
@@ -69,12 +113,14 @@ button{
 }
 
 .column div {
-    display: flex;
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
     align-items: flex-start;
 }
 
-.col{
-    gap: 25px;
+.col p {
+    margin-right: 15px;
 }
 
 .column div div {
@@ -101,4 +147,124 @@ h4 {
 
 .footer p{
     font-weight: 300;
+}
+
+span.redes {
+    display: flex;
+    gap: 5px;
+}
+
+span.redes a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+span.redes a img {
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
+}
+
+.close-btn {
+    position: absolute;
+    display: flex;
+    top: 10px;
+    right: 0px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.arrow {
+    border: solid var(--claro);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 4px;
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+
+/* login */
+
+section.cont.adm.login{
+    gap: 15px;
+    background-image: url(./Components/home/assets/pexels-andreea-ch-371539-3969097.jpg);
+    background-size: cover;
+    background-position: bottom;
+}
+
+section.cont.adm.login.authenticated{
+    background-image: none;
+}
+
+section.cont.adm.login form {
+    font-size: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    display: flex;
+}
+
+.asterisco{
+    color: red;
+}
+
+input#usuario, input#clave {
+    border: 1px solid #c1c3c5;
+    margin-bottom: 10px;
+    height: 20px;
+}
+
+input#usuario:focus-visible, input#clave:focus-visible{
+    outline: var(--nav);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.error {
+    height: 20px;
+}
+
+span.label.log-error, .recover-cred p {
+    font-size: smaller;
+}
+
+.btn-simple{
+    width: auto;
+    background-color: white;
+    border: 1px solid #c1c3c5;
+    color: #888888;
+    cursor: pointer;
+    padding: 5px 16px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: small;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.btn-simple:hover{
+    box-shadow: rgba(0, 0, 0, .2) 0 2px 3px;
+}
+
+.footer.adm{
+    height: 7%;
+    position: fixed;
+    bottom: 0;
 }

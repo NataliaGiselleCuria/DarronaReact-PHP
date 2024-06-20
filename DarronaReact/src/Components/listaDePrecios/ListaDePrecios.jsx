@@ -9,41 +9,47 @@ import arrow from '../../assets/arrow.png'
 import arrowBack from '../../assets/arrow-back.png'
 import Categories from './Categories';
 import ProductSearch from './ProductSearch';
+import { useApi } from '../../Context/ApiProvider';
+import FormOrder from './FormOrder';
+import Nav from '../footer/Nav';
 
 
 const ListaDePrecios = ({ tableType }) => {
-
-  // !! esto debería traerse de la base de datos, y que se pueda modificar desde vista adm
-  const minimumPurchaseContent = () => {
-    switch (tableType) {
-      case 'minorista':
-        return <p className='minimum-purchase'>MÁXIMO COMPRA MINORISTA $100.000</p>
-      case 'mayorista':
-        return <p className='minimum-purchase'>MÍNIMO COMPRA MAYORISTA $100.000</p>
-      case 'distribuidor':
-        return <p className='minimum-purchase'>MÍNIMO COMPRA DISTRIBUIDOR $500.000</p>
-      default:
-        return <p className='minimum-purchase'>Por favor selecciona una tabla desde la página de inicio.</p>
-    }
-  };
 
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate('/');
   };
 
+  const { amounts, isLoading } = useApi();
   const { totalOrderFormat } = useContext(OrderContext)
   const [showOrder, setShowOrder] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [isFinalized, setIsFinalized] = useState(false);
+  
+  const minimumPurchaseContent = () => {
+    if (isLoading) {
+      return <p className='minimum-purchase'>CARGANDO MINIMO DE COMPRA</p>;
+    }
+    const typeBuyer = amounts.find((amount) => amount.categoría === tableType);
+    return <p className='minimum-purchase'>{typeBuyer.mensaje}</p>;
+  };
 
   const handleVerPedidoClick = () => {
     setShowOrder(prevShowOrder => !prevShowOrder);
+    setShowForm(false);
+    setIsFinalized(false); 
+  };
+
+  const handleFinalizarClick = () => {
+    setShowOrder(true);
+    setShowForm(true);
+    setIsFinalized(true);
   };
 
   return (
     <div className='lista-precios'>
-      <div className='nav'>
-        <span><a>ZONAS Y FECHAS DE ENTREGA</a><p>|</p><a>AYUDA</a><p>|</p><a>CONTACTO</a></span>
-      </div>
+      <Nav/>
       <section className="cont">
         <div className='nav-lis'>
           <div className='logo'>
@@ -51,8 +57,8 @@ const ListaDePrecios = ({ tableType }) => {
             <h1><span>LISTA DE PRECIOS </span><span> DISTRIBUIDORA DARRONA</span></h1>
           </div>
           <div className='summary-cont'>
-            <div className='ml'><p className='summary'>RESUMEN DE PEDIDO</p><p className='price-summary'>${totalOrderFormat}</p></div>
-            {minimumPurchaseContent()}
+            <div className='ml'><p className='summary'>RESUMEN DE PEDIDO</p><p className='price-summary'>{totalOrderFormat}</p></div>
+             {minimumPurchaseContent()} 
           </div>
         </div>
         <div className='nav2'>
@@ -60,23 +66,30 @@ const ListaDePrecios = ({ tableType }) => {
             <img src={arrowBack} alt="flecha para volver a la pagina de eleccion de consumidor." onClick={handleBackClick}></img>
             <h3>{tableType.toUpperCase()}</h3>
           </div>
-          <div className='buttons-list'> 
-            <button className='button-list' onClick={handleVerPedidoClick}>
-              {showOrder ? "Volver" : "Ver pedido"}
-            </button>
-            <button className='button-list'> FINALIZAR </button>
+          <div className='buttons-list'>
+            {showForm && showOrder ? (
+              <button className='button-list add-more-p' onClick={handleVerPedidoClick}>
+                Seguir agregando productos
+              </button>
+            ) : (
+              <>
+                <button className='button-list' onClick={handleVerPedidoClick}>
+                  {showOrder ? "Volver" : "Ver pedido"}
+                </button>
+                <button className='button-list' onClick={handleFinalizarClick}>Finalizar</button>
+              </>
+            )}
           </div>
         </div>
-        <div className='cont-products'>
-         
+        <div className='cont-products'>         
           <div className='categories-cont'>
             <h2>CATEGORIAS</h2>
             <ProductSearch></ProductSearch>
             <Categories></Categories>
-          </div>
-         
+          </div> 
           <div className='cont-table'>
-            <Table showOrder={showOrder} />
+            {showForm && <FormOrder />}
+            <Table showOrder={showOrder}  isFinalized={isFinalized} />
           </div>
         </div>
         <a href="#inicio" className="inicio"><img src={arrow} alt="icono de flecha hacia arriba para volver a la parte superior de la página"></img></a>

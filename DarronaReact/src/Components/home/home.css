@@ -1,14 +1,17 @@
-.cont{
-    text-align: center;
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+
+.home .cont{
+    background-image: url(/src/Components/home/assets/pexels-andreea-ch-371539-3969097.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .img-cont {
-    height: 30%;
+    height: 25%;
+}
+
+.home .img-cont {
+    margin-bottom: 10px;
 }
 
 h1{
@@ -21,23 +24,26 @@ h1{
     -webkit-text-fill-color: transparent;
 }
 
-span{
-    height: 25px;
+h1 span {
+    height: 23px;
+}
+
+.footer span{
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.buttons{
-    width: 70%;
+.buttons {
     display: flex;
     gap: 20px;
-    justify-content: center;
-    margin: 50px 0;
+    margin: 30px 0;
+    margin-bottom: 100px;
 }
 
 .buttons button {
-    height: 80px;
+    height: 60px;
     width: 220px;
     display: flex;
     justify-content: center;
@@ -47,16 +53,22 @@ span{
     font-size: 20px;
     font-weight: 300;
     letter-spacing: 1px;
-    color: white;
+    color: var(--principal);
+    outline: 1px solid #554e4629;
     border: none;
     border-radius: 10px;
+    background-color: transparent;
+}
+
+.buttons button:hover{
+    box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.384);
 }
 
 button img{
     height: 30px;
 }
 
-.b-1, .b-2, .b-3{
+/* .b-1, .b-2, .b-3{
     background-size: cover;
 }
 
@@ -70,4 +82,8 @@ button img{
 
 .b-3{
     background-image: url('./assets/button-3.png');
+} */
+
+.home .footer button{
+    display: none;
 }

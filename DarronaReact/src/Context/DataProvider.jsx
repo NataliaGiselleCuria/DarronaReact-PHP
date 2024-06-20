@@ -1,8 +1,12 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
+import { useApi } from './ApiProvider';
 
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+
+  const { products } = useApi();
+
 
   //Productos filtrados por buscador.
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -12,30 +16,18 @@ export const DataProvider = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   
 
-  //Traer productos de la base de datos.
-  const [resData, setResData] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:80/darronaReact/DarronaPhp/index.php')
-      .then(response => response.json())
-      .then(data => {
-        setResData(data);
-        console.log(resData)
-    });     
-  }, []);
-
-
   //Tomar las categorias de la base de datos sin que se repitan.
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const extractedCategories = resData.map(item => item.Categoría).filter(Boolean);
+    const extractedCategories = products.map(item => item.Categoría).filter(Boolean);
     const uniqueCategories = Array.from(new Set(extractedCategories));
 
     if (uniqueCategories.length > 0) {
       setCategories(uniqueCategories);
     }     
-  }, [resData]);
+
+  }, [products]);
 
 
   //Guardar la eleccion de consumidor del Home en LS.
@@ -46,9 +38,7 @@ export const DataProvider = ({ children }) => {
   }, [tableType]);
 
 
-
   const value = useMemo(() => ({
-    resData, 
     categories,  
     filteredProducts,
     setFilteredProducts,
@@ -56,10 +46,9 @@ export const DataProvider = ({ children }) => {
     setSelectedCategory, 
     setCategories,
     tableType, 
-    setTableType
+    setTableType,
   }), 
   [
-    resData, 
     categories, 
     filteredProducts,
     setFilteredProducts,
@@ -67,7 +56,7 @@ export const DataProvider = ({ children }) => {
     setSelectedCategory, 
     setCategories,
     tableType, 
-    setTableType
+    setTableType,
   ]);
 
   return (
